@@ -7,7 +7,8 @@ from sklearn.cluster import KMeans
 import joblib
 from sklearn.metrics import mean_absolute_error, r2_score
 from sklearn.model_selection import train_test_split, GridSearchCV
-from sklearn.metrics import roc_auc_score, average_precision_score
+from sklearn.metrics import roc_auc_score, average_precision_score, precision_score, recall_score, f1_score
+
 import h3
 
 
@@ -38,16 +39,18 @@ def train_trip_classifier(trips_df: pd.DataFrame, significant_features: list, pa
     joblib.dump(best_model, os.path.join(out_dir, "models", "xgb_model.joblib"))
     best_model.fit(X_train, y_train)
     pred = best_model.predict_proba(X_test)[:,1]
-    auc = roc_auc_score(y_test, pred)
-    ap = average_precision_score(y_test, pred)
+    precision_score = precision_score(y_test, pred, average='weighted')
+    recall_score_val = recall_score(y_test, pred, average='weighted')
+    f1 = f1_score(y_test, pred, average='weighted')
     os.makedirs(out_dir, exist_ok=True)
     joblib.dump(best_model, os.path.join(out_dir, "models", "xgb_trip_classifier.joblib"))
     metrics_path = os.path.join(out_dir, "models", "xgb_trip_classifier_metrics.txt")
     with open(metrics_path, "w") as f:
-        f.write(f"AUC: {auc:.4f}\n")
-        f.write(f"Average Precision: {ap:.4f}\n")
+        f.write(f"precision: {precision_score:.4f}\n")
+        f.write(f"Recall: {recall_score_val:.4f}\n")
+        f.write(f"F1: {f1:.4f}\n")
 
-    return best_model, {'auc': float(auc), 'average_precision': float(ap)}
+    return best_model, {'precision': float(precision_score), 'recall_score_val': float(recall_score_val), 'F1-score': float{f1}}
 
 
 def trip_level_accidient_classifier(trips: pd.DataFrame, crashes: pd.DataFrame, significant_features: list, param_grid: Dict, test_size: float, out_dir: str):
@@ -212,4 +215,5 @@ def predict_crash_and_severity(
         }
 
     print("Both models trained successfully!")
+
     return results
