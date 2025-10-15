@@ -40,9 +40,9 @@ def train_trip_classifier(trips_df: pd.DataFrame, significant_features: list, pa
     best_model.fit(X_train, y_train)
     pred = best_model.predict_proba(X_test)[:,1]
     y_pred = best_model.predict(X_test)
-    precision_score_v = precision_score(y_test, y_pred, average='weighted')
-    recall_score_val = recall_score(y_test, y_pred, average='weighted')
-    f1 = f1_score(y_test, y_pred, average='weighted')
+    precision_score_v = precision_score(y_test, y_pred, average='macro')
+    recall_score_val = recall_score(y_test, y_pred, average='macro')
+    f1 = f1_score(y_test, y_pred, average='macro')
     os.makedirs(out_dir, exist_ok=True)
     joblib.dump(best_model, os.path.join(out_dir, "models", "xgb_trip_classifier.joblib"))
     metrics_path = os.path.join(out_dir, "models", "xgb_trip_classifier_metrics.txt")
@@ -218,5 +218,6 @@ def predict_crash_and_severity(
     print("Both models trained successfully!")
 
     return results
+
 
 
