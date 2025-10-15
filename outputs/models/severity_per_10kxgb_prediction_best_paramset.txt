@@ -1,0 +1,3 @@
+Best parameters: {'learning_rate': 0.005, 'max_depth': 2, 'n_estimators': 200, 'subsample': 0.8}
+MAE: 38.3656
+R²: 0.0137

@@ -1,0 +1,2 @@
+AUC: 0.6041
+Average Precision: 0.7808
