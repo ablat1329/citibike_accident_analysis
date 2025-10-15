@@ -1,2 +1,5 @@
 # citibike_accident_analysis
-Coding challenge AXA
+Run the code:
+python -m src.main
+
+Details of the steps are described in .pptx
